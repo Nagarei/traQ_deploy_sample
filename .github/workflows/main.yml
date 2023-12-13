@@ -13,9 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Checkout And Build
-        run: docker compose up -d
+        run: docker compose up --quiet-pull -d 
       - name: healthcheck front
-        run: curl -k -s https://localhost:8080 || exit 1
+        run: docker compose exec es curl -k http://frontend:80 || exit 1
       - name: healthcheck backend
-        run: curl -k -s https://localhost:8080/api/v3/version || exit 1
+        run: docker compose exec es curl -k http://backend:3000/api/v3/version || exit 1
     
