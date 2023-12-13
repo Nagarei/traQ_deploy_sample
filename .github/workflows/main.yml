@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout And Build
+        run: docker compose up -d
+      - name: healthcheck
+        run: bash -c "curl -k -s https://localhost:8080 >/dev/null || exit 1"
+    
