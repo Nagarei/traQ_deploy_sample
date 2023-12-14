@@ -24,7 +24,8 @@ jobs:
         run: docker compose exec reverse-proxy curl -k https://localhost/api/v3/version || exit 1
       - name: login&logout test backend
         run: |
-          #!/bin/sh
+          #!/bin/bash
+          shopt -s expand_aliases
           alias curld="docker compose exec reverse-proxy curl -b cookie.txt -c cookie.txt -k"
           alias curlstat="curld -o /dev/null -w '%{http_code}' -s"
           alias curlPstat="curlstat -X POST -H 'Content-Type: application/json' -d"
