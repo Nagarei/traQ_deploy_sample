@@ -14,10 +14,24 @@ jobs:
       - uses: actions/checkout@v4
       - name: Checkout And Build
         run: docker compose up --quiet-pull -d 
+      - name: install curl
+        run: docker compose exec reverse-proxy sh -c "apk update && apk add curl"
       - name: wait backend healty
         run: sleep 30s
       - name: healthcheck front
-        run: docker compose exec es curl -k http://frontend:80 || exit 1
+        run: docker compose exec reverse-proxy curl -k https://localhost || exit 1
       - name: healthcheck backend
-        run: docker compose exec es curl -k http://backend:3000/api/v3/version || exit 1
+        run: docker compose exec reverse-proxy curl -k https://localhost/api/v3/version || exit 1
+      - name: login&logout test backend
+        run: |
+          #!/bin/sh
+          alias curld="docker compose exec reverse-proxy curl -b cookie.txt -c cookie.txt -k"
+          alias curlstat="curld -o /dev/null -w '%{http_code}' -s"
+          alias curlPstat="curlstat -X POST -H 'Content-Type: application/json' -d"
+          if [ `curlstat https://localhost/api/v3/users/me` != "401" ]; then echo "me!=401"; exit 1; fi
+          if [ `curlPstat '{"name": "traq", "password": "a"}' https://localhost/api/v3/login` != "401" ]; then echo "login!=401"; exit 1; fi
+          if [ `curlPstat '{"name": "traq", "password": "traq"}' https://localhost/api/v3/login` != "204" ]; then echo "login!=204"; exit 1; fi
+          if [ `curlstat https://localhost/api/v3/users/me` != "200" ]; then echo "me!=200"; exit 1; fi
+          if [ `curlstat -X POST https://localhost/api/v3/logout?all=false` != "204" ]; then echo "logout!=204"; exit 1; fi
+          if [ `curlstat https://localhost/api/v3/users/me` != "401" ]; then echo "me(logout)!=401"; exit 1; fi
     
