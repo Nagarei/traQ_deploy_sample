@@ -2,7 +2,7 @@ version: '3'
 
 services:
   reverse-proxy:
-    image: caddy:latest
+    image: caddy:2.7.6-alpine
     container_name: traq-reverse-proxy
     restart: always
     ports:
@@ -17,7 +17,7 @@ services:
       - caddy-config:/config
 
   backend:
-    image: ghcr.io/traptitech/traq:latest
+    image: ghcr.io/traptitech/traq:3.16.2
     container_name: traq-backend
     restart: always
     expose:
@@ -32,7 +32,7 @@ services:
       - app-storage:/app/storage
 
   frontend:
-    image: ghcr.io/traptitech/traq-ui:latest
+    image: ghcr.io/traptitech/traq-ui:3.18.2
     container_name: traq-frontend
     restart: always
     expose:
@@ -50,7 +50,7 @@ services:
       - "80"
 
   db:
-    image: mariadb:10.6.4
+    image: mariadb:10.11.6
     container_name: traq-db
     restart: always
     environment:
@@ -58,7 +58,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: traq
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
     expose:
       - "3306"
     volumes:
