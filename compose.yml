@@ -17,7 +17,7 @@ services:
       - caddy-config:/config
 
   backend:
-    image: ghcr.io/traptitech/traq:3.16.1
+    image: ghcr.io/traptitech/traq:3.16.2
     container_name: traq-backend
     restart: always
     expose:
