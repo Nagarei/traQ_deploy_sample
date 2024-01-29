@@ -17,8 +17,6 @@ jobs:
         run: docker compose up --quiet-pull -d 
       - name: install curl
         run: docker compose exec reverse-proxy sh -c "apk update && apk add curl"
-      - name: wait backend healty
-        run: sleep 30s
       - name: healthcheck front
         run: docker compose exec reverse-proxy curl -k https://localhost || exit 1
       - name: healthcheck backend
