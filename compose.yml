@@ -34,7 +34,7 @@ services:
       - app-storage:/app/storage
 
   frontend:
-    image: ghcr.io/traptitech/traq-ui:3.20.1
+    image: ghcr.io/traptitech/traq-ui:3.20.2
     container_name: traq-frontend
     restart: always
     expose:
