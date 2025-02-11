@@ -2,7 +2,7 @@ version: '3'
 
 services:
   reverse-proxy:
-    image: caddy:2.8.4-alpine
+    image: caddy:2.9.1-alpine
     container_name: traq-reverse-proxy
     restart: always
     ports:
@@ -19,7 +19,7 @@ services:
       - caddy-config:/config
 
   backend:
-    image: ghcr.io/traptitech/traq:3.21.0
+    image: ghcr.io/traptitech/traq:3.22.0
     container_name: traq-backend
     restart: always
     expose:
@@ -34,7 +34,7 @@ services:
       - app-storage:/app/storage
 
   frontend:
-    image: ghcr.io/traptitech/traq-ui:3.22.1
+    image: ghcr.io/traptitech/traq-ui:3.23.5
     container_name: traq-frontend
     restart: always
     expose:
@@ -52,7 +52,7 @@ services:
       - "80"
 
   db:
-    image: mariadb:10.11.9
+    image: mariadb:10.11.10
     container_name: traq-db
     restart: always
     environment:
